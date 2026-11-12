@@ -1,0 +1,50 @@
+# ============================================================
+# 跨模态检索（双塔 + 对比学习）默认配置
+# 命令行覆盖示例: python -m cmr.train --set train.epochs=20
+# ============================================================
+seed: 42
+
+data:
+  root: data/flickr8k           # 数据集根目录（相对项目根）
+  image_dir: images
+  captions_file: Flickr8k.token.txt
+  # 中文标注文件（由 `python -m cmr.translate_captions` 生成，可选）
+  captions_zh_file: Flickr8k.token.zh.txt
+  mix_chinese: true             # 训练时 50% 概率用中文标注（需先生成上述文件）
+  image_size: 224
+  max_text_len: 64
+  num_workers: 4
+
+model:
+  image_arch: resnet50          # resnet18 / resnet34 / resnet50 / resnet101
+  image_pretrained: true        # false = 随机初始化（8k 数据量下效果会差很多，可作对照实验）
+  # 多语言文本编码器（WordPiece 分词，无需 sentencepiece）。
+  # 可换任何 HF 编码器，例如 sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2（需 sentencepiece）
+  text_model: distilbert-base-multilingual-cased
+  freeze_image_backbone: false
+  freeze_text_backbone: false
+  embed_dim: 512                # 双塔共享嵌入维度
+
+train:
+  batch_size: 64                # 显存不足请调小（如 32 / 16），对比学习批越大负样本越多、效果越好
+  epochs: 10
+  lr: 3.0e-5                    # 预训练骨干学习率
+  head_lr: 1.0e-4               # 投影头 / 温度学习率
+  weight_decay: 0.2
+  warmup_ratio: 0.05
+  grad_clip: 1.0                # 置 0 或 null 关闭梯度裁剪
+  amp: true                     # 有 CUDA 时自动启用混合精度
+  log_every: 25
+  val_each_epoch: true
+  checkpoint_dir: checkpoints   # 相对项目根
+  resume: null                  # 断点续训 checkpoint 路径，如 checkpoints/last.pt
+
+eval:
+  recall_ks: [1, 5, 10]
+  batch_size: 64
+  report_dir: reports
+
+app:
+  host: 127.0.0.1               # 局域网访问改为 0.0.0.0
+  port: 7860
+  top_k: 12

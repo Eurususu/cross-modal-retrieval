@@ -1,0 +1,23 @@
+# PyTorch（Python 3.13 需要 >=2.5；Python 3.9~3.12 用 >=2.1 即可）
+torch>=2.5
+torchvision>=0.20
+
+# 文本编码器 / 翻译模型
+transformers>=4.44
+huggingface_hub>=0.24
+
+# Web 演示界面
+gradio>=4.44
+
+# 基础依赖
+numpy
+pillow>=10.0
+pyyaml
+tqdm
+requests
+
+# 可选：运行 `python -m cmr.translate_captions`（中文标注翻译）时需要
+# pip install sentencepiece
+
+# 开发 / 单元测试
+pytest

@@ -1,0 +1,41 @@
+{
+    // VSCode 调试配置：F5 启动，或在"运行和调试"面板选择
+    // 关键点: "module": "cmr.app" 等价于 python -m cmr.app（保持包上下文，相对导入不炸）
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "调试: Gradio 演示 (cmr.app)",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "cmr.app",
+            "cwd": "${workspaceFolder}",
+            "python": "/home/jia/anaconda3/envs/onnx_trt/bin/python",
+            "args": ["--set", "app.host=0.0.0.0"],
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+                "HF_ENDPOINT": "https://hf-mirror.com",
+                "http_proxy": null,
+                "https_proxy": null,
+                "all_proxy": null
+            }
+        },
+        {
+            "name": "调试: 训练 (cmr.train)",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "cmr.train",
+            "cwd": "${workspaceFolder}",
+            "python": "/home/jia/anaconda3/envs/onnx_trt/bin/python",
+            "args": [],
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+                "HF_ENDPOINT": "https://hf-mirror.com",
+                "http_proxy": null,
+                "https_proxy": null,
+                "all_proxy": null
+            }
+        }
+    ]
+}
